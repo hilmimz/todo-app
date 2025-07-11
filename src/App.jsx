@@ -2,32 +2,74 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import ToDoShowList from './components/ToDoShowList'
+import ToDoForm from './components/ToDoForm'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [idCounter, setIdCounter] = useState(1)
+  const [toDo, setToDo] = useState([])
+  const [filter, setFilter] = useState("all");
 
-  return (
+  const addToDo = (name) => {
+    const newToDo = {
+      id: idCounter,
+      name,
+      completed: false
+    }
+
+    setToDo(prev => [
+      ...prev,
+      newToDo
+    ])
+
+    setIdCounter(prev => prev+1)
+  }
+
+  const changeStatus = (id) => {
+    const updatedToDoStatus = toDo.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completed: !item.completed
+        }
+      } else {
+        return item
+      }
+    })
+    setToDo(updatedToDoStatus)
+  }
+
+  const deleteToDo = (id) => {
+    const filteredToDo = toDo.filter(item => item.id != id)
+    setToDo(filteredToDo)
+  }
+
+  const updateToDo = (id, newName) => {
+    const updatedToDo = toDo.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          name: newName
+        }
+      } else {
+        return item
+      }
+    })
+
+    setToDo(updatedToDo)
+  }
+
+  return(
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>To Do List App</h1>
+      <p>Tambahkan To Do di input di bawah ini</p>
+      <ToDoForm onAdd={addToDo} />
+      <br />
+      <h3>Filter To Do</h3>
+      <button onClick={() => setFilter("all")}>Semua</button>
+      <button onClick={() => setFilter("completed")}>Selesai</button>
+      <button onClick={() => setFilter("incomplete")}>Belum Selesai</button>
+      <ToDoShowList todo={toDo} onChange={changeStatus} onDelete={deleteToDo} onUpdate={updateToDo} filter={filter}/>
     </>
   )
 }
