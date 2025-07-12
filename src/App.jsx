@@ -5,6 +5,7 @@ import './App.css'
 import ToDoShowList from './components/ToDoShowList'
 import ToDoForm from './components/ToDoForm'
 
+
 function App() {
   const [idCounter, setIdCounter] = useState(1)
   const [toDo, setToDo] = useState([])
@@ -60,17 +61,27 @@ function App() {
   }
 
   return(
-    <>
-      <h1>To Do List App</h1>
-      <p>Tambahkan To Do di input di bawah ini</p>
-      <ToDoForm onAdd={addToDo} />
-      <br />
-      <h3>Filter To Do</h3>
-      <button onClick={() => setFilter("all")}>Semua</button>
-      <button onClick={() => setFilter("completed")}>Selesai</button>
-      <button onClick={() => setFilter("incomplete")}>Belum Selesai</button>
-      <ToDoShowList todo={toDo} onChange={changeStatus} onDelete={deleteToDo} onUpdate={updateToDo} filter={filter}/>
-    </>
+    <div
+    className={`mx-auto m-5 shadow-2xl min-w-[700px] max-w-[700px] flex flex-col items-center rounded-2xl transition-all duration-300 ease-in-out overflow-hidden`}
+    style={{ height: `${270 + toDo.length * 96}px` }}
+    >
+      <header className='bg-blue-300 w-full flex flex-col items-center space-y-5 p-5 rounded-t-2xl'>
+        <h1 className='text-4xl text-white'>To Do List App</h1>
+        <p className='italic'>A better day starts with a simple list</p>
+      </header>
+      <main className='w-full p-8 flex flex-col'>
+        <ToDoForm onAdd={addToDo} />
+        <div className='flex space-x-6 mt-5'>
+          <button onClick={() => setFilter("all")} className={`${filter === "all"? ' border-sky-500 bg-sky-500 text-white ': 'border-gray-300'} text-sm px-3 py-1 border cursor-pointer rounded-lg hover:-translate-y-0.5 transition-all duration-300`}>Semua</button>
+          <button onClick={() => setFilter("completed")} className={`${filter === "completed"? ' border-sky-500 bg-sky-500 text-white ': 'border-gray-300'} text-sm px-3 py-1 border cursor-pointer rounded-lg hover:-translate-y-0.5 transition-all duration-300`}>Selesai</button>
+          <button onClick={() => setFilter("incomplete")} className={`${filter === "incomplete"? ' border-sky-500 bg-sky-500 text-white ': 'border-gray-300'} text-sm px-3 py-1 border cursor-pointer rounded-lg hover:-translate-y-0.5 transition-all duration-300`}>Belum Selesai</button>
+        </div>
+        <div className='transition-all duration-500'>
+          <ToDoShowList todo={toDo} onChange={changeStatus} onDelete={deleteToDo} onUpdate={updateToDo} filter={filter}/>
+        </div> 
+      </main>
+    </div>
+
   )
 }
 
