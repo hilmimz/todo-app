@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,8 +7,16 @@ import ToDoForm from './components/ToDoForm'
 
 
 function App() {
-  const [idCounter, setIdCounter] = useState(1)
-  const [toDo, setToDo] = useState([])
+  const [idCounter, setIdCounter] = useState(()=> {
+    const storedId = localStorage.getItem("todos_id")
+    return storedId ? JSON.parse(storedId) : 1
+  })
+
+  const [toDo, setToDo] = useState(()=>{
+    const stored = localStorage.getItem("todos")
+    return stored ? JSON.parse(stored) : []
+  })
+
   const [filter, setFilter] = useState("all");
 
   const addToDo = (name) => {
@@ -59,6 +67,14 @@ function App() {
 
     setToDo(updatedToDo)
   }
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(toDo));
+  }, [toDo]);
+
+  useEffect(() => {
+    localStorage.setItem("todos_id", idCounter.toString());
+  }, [idCounter]);
 
   return(
     <div
